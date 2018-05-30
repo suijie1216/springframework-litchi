@@ -8,10 +8,7 @@ package org.springframework.litchi.qps;
 public interface QPSListener {
     /**
      * qps监听器
-     * @param path
-     * @param time
-     * @param qps
-     * @param rt
+     * @param node
      */
-    void event(String path, String time, int qps, long rt);
+    void event(QPSNode node);
 }
