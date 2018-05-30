@@ -2,8 +2,8 @@ package org.springframework.litchi.common.test;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.litchi.qps.QPSCounterWorker;
-import org.springframework.litchi.trace.Trace;
+import org.springframework.litchi.profile.qps.QPSCounterWorker;
+import org.springframework.litchi.profile.trace.Trace;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 

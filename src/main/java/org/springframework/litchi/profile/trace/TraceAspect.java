@@ -1,4 +1,4 @@
-package org.springframework.litchi.trace;
+package org.springframework.litchi.profile.trace;
 
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.JoinPoint;
@@ -20,7 +20,7 @@ import java.lang.reflect.Method;
 @Component
 public class TraceAspect {
 
-    @Pointcut("@annotation(org.springframework.litchi.trace.TracePoint)")
+    @Pointcut("@annotation(org.springframework.litchi.profile.trace.TracePoint)")
     public void tracePoint() {
 
     }

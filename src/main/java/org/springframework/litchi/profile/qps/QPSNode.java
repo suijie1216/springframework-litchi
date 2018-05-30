@@ -1,4 +1,4 @@
-package org.springframework.litchi.qps;
+package org.springframework.litchi.profile.qps;
 
 import lombok.Data;
 

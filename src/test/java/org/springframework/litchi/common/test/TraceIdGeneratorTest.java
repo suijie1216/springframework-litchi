@@ -1,7 +1,7 @@
 package org.springframework.litchi.common.test;
 
 import org.junit.Test;
-import org.springframework.litchi.trace.TraceIdGenerator;
+import org.springframework.litchi.profile.trace.TraceIdGenerator;
 
 /**
  * @author: suijie

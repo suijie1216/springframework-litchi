@@ -1,4 +1,4 @@
-package org.springframework.litchi.trace;
+package org.springframework.litchi.profile.trace;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;

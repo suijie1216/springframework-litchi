@@ -6,9 +6,9 @@ import org.springframework.context.annotation.ComponentScans;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.litchi.common.cache.LocalCache;
-import org.springframework.litchi.qps.QPSCounterWorker;
-import org.springframework.litchi.qps.QPSListener;
-import org.springframework.litchi.qps.QPSNode;
+import org.springframework.litchi.profile.qps.QPSCounterWorker;
+import org.springframework.litchi.profile.qps.QPSListener;
+import org.springframework.litchi.profile.qps.QPSNode;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

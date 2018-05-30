@@ -1,4 +1,4 @@
-package org.springframework.litchi.qps;
+package org.springframework.litchi.profile.qps;
 
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
