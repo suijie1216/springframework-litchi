@@ -2,7 +2,6 @@ package org.springframework.litchi.trace;
 
 import com.google.common.collect.Maps;
 
-import java.text.SimpleDateFormat;
 import java.util.Map;
 import java.util.Stack;
 import java.util.function.Supplier;
@@ -29,9 +28,9 @@ public class Trace {
     /**
      * trace节点栈
      */
-    private static ThreadLocal<Stack<Node>> traceStack = ThreadLocal.withInitial(new Supplier<Stack<Node>>() {
+    private static ThreadLocal<Stack<TraceNode>> traceStack = ThreadLocal.withInitial(new Supplier<Stack<TraceNode>>() {
         @Override
-        public Stack<Node> get() {
+        public Stack<TraceNode> get() {
             return new Stack<>();
         }
     });
@@ -50,17 +49,17 @@ public class Trace {
      * @param name
      */
     public static void traceIn(String name) {
-        Node node = new Node();
-        node.name = name;
-        node.time = System.currentTimeMillis();
+        TraceNode node = new TraceNode();
+        node.setName(name);
+        node.setTime(System.currentTimeMillis());
         int idx = index.get() + 1;
-        node.index = idx;
+        node.setIndex(idx);
         index.set(idx);
         traceStack.get().push(node);
-        for (int i = 0; i < node.index; i++) {
+        for (int i = 0; i < node.getIndex(); i++) {
             log.get().append(SPACE_STR);
         }
-        log.get().append(node.name).append("--->begin:").append(node.getFormatTime()).append("\n");
+        log.get().append(node.getName()).append("--->begin:").append(node.getFormatTime()).append("\n");
     }
 
     /**
@@ -68,28 +67,28 @@ public class Trace {
      * @param name
      */
     public static void traceOut(String name) {
-        Node node = new Node();
-        node.name = name;
-        node.time = System.currentTimeMillis();
+        TraceNode node = new TraceNode();
+        node.setName(name);
+        node.setTime(System.currentTimeMillis());
         int idx = index.get();
-        node.index = idx;
+        node.setIndex(idx);
         index.set(idx - 1);
         StringBuilder sb = log.get();
         if (traceStack.get().isEmpty()) {
-            sb.append(node.name).append("--->end:").append(node.getFormatTime()).append(" not find bigin").append("\n");
+            sb.append(node.getName()).append("--->end:").append(node.getFormatTime()).append(" not find bigin").append("\n");
             return;
         }
-        Node begin = traceStack.get().pop();
-        for (int i = 0; i < node.index; i++) {
+        TraceNode begin = traceStack.get().pop();
+        for (int i = 0; i < node.getIndex(); i++) {
             sb.append(SPACE_STR);
         }
-        if (begin.index != node.index) {
-            sb.append(node.name).append("--->end:").append(node.getFormatTime()).append(" begin not match").append("\n");
+        if (begin.getIndex() != node.getIndex()) {
+            sb.append(node.getName()).append("--->end:").append(node.getFormatTime()).append(" begin not match").append("\n");
             return;
         }
-        long cost = node.time - begin.time;
-        sb.append(node.name).append("--->").append("end:").append(node.getFormatTime()).append(",cost:").append(cost).append("\n");
-        costMap.get().put(node.name, cost);
+        long cost = node.getTime() - begin.getTime();
+        sb.append(node.getName()).append("--->").append("end:").append(node.getFormatTime()).append(",cost:").append(cost).append("\n");
+        costMap.get().put(node.getName(), cost);
     }
 
     /**
@@ -120,16 +119,5 @@ public class Trace {
         String trace = log.get().toString();
         reset();
         return trace;
-    }
-
-    private static class Node {
-        private String name;
-        private long time;
-        private int index;
-
-        public String getFormatTime(){
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
-            return format.format(time);
-        }
     }
 }
