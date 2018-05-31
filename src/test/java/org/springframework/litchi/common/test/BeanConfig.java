@@ -28,8 +28,8 @@ public class BeanConfig {
         return new LocalCache<>(50, 1000000);
     }
 
-    @Bean(value = "qpsCounterFactory")
-    public QPSCounterWorker buildQPSCounterFactory() {
+    @Bean(value = "qpsCounterWorker")
+    public QPSCounterWorker buildQPSCounterWorker() {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         QPSListener listener = new QPSListener() {
             @Override
