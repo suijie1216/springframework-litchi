@@ -10,7 +10,6 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <start-class>com.xiaoju.automarket.energysupply.EnergySupplyApplication</start-class>
     </properties>
 
     <dependencies>
