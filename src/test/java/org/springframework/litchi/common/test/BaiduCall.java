@@ -2,7 +2,7 @@ package org.springframework.litchi.common.test;
 
 import org.springframework.litchi.http.Host;
 import org.springframework.litchi.module.response.Response;
-import retrofit2.http.POST;
+import retrofit2.http.GET;
 import retrofit2.http.Query;
 
 /**
@@ -13,6 +13,6 @@ import retrofit2.http.Query;
 @Host("http://10.95.121.194:8002/")
 public interface BaiduCall {
 
-    @POST("order/get")
+    @GET("order/get")
     Response test(@Query("order_id") Long id);
 }

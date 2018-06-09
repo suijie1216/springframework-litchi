@@ -21,8 +21,11 @@ public class HttpServiceBuilder<T> implements FactoryBean<T>, InitializingBean {
 
     private Class<T> targetClass;
     private T object;
+
+    /** http客户端 */
     private static OkHttpClient httpClient;
 
+    //初始化http客户端
     static {
         HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor(message -> {
             if (logger.isDebugEnabled()) {
@@ -30,7 +33,6 @@ public class HttpServiceBuilder<T> implements FactoryBean<T>, InitializingBean {
             }
         });
         httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-
         httpClient = new OkHttpClient.Builder().addInterceptor(httpLoggingInterceptor).build();
     }
 
