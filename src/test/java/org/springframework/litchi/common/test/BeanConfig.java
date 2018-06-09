@@ -6,6 +6,7 @@ import org.springframework.context.annotation.ComponentScans;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.litchi.common.cache.LocalCache;
+import org.springframework.litchi.http.HttpServiceBuilder;
 import org.springframework.litchi.profile.qps.QPSCounterWorker;
 import org.springframework.litchi.profile.qps.QPSListener;
 import org.springframework.litchi.profile.qps.QPSNode;
@@ -22,6 +23,11 @@ import java.util.Date;
 @EnableAspectJAutoProxy
 @ComponentScans({@ComponentScan("org.springframework.litchi")})
 public class BeanConfig {
+
+    @Bean
+    public HttpServiceBuilder<BaiduCall> buildBaiduCall(){
+        return new HttpServiceBuilder<>(BaiduCall.class);
+    }
 
     @Bean
     public LocalCache<String, Object> buildLocalCache(){

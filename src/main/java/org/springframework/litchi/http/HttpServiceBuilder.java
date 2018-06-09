@@ -42,7 +42,7 @@ public class HttpServiceBuilder<T> implements FactoryBean<T>, InitializingBean {
     }
 
     @Override
-    public T getObject() throws Exception {
+    public T getObject() {
         return object;
     }
 
@@ -57,7 +57,7 @@ public class HttpServiceBuilder<T> implements FactoryBean<T>, InitializingBean {
     }
 
     @Override
-    public void afterPropertiesSet() throws Exception {
+    public void afterPropertiesSet() {
         if (targetClass == null) {
             throw new NullPointerException("class is null");
         }
