@@ -46,10 +46,9 @@ public class HttpServiceBuilder<T> implements FactoryBean<T> {
         //初始化retrofit builder
         Retrofit.Builder builder = new Retrofit.Builder();
         builder.client(httpClient);
-        Host host = targetClass.getAnnotation(Host.class);
-        HttpConvertFactory httpConvertFactory = new HttpConvertFactory(host.charset(),host.snake());
-        builder.addConverterFactory(httpConvertFactory);
         builder.addCallAdapterFactory(new BizCallAdapterFactory());
+        Host host = targetClass.getAnnotation(Host.class);
+        builder.addConverterFactory(new HttpConvertFactory(host.charset(),host.snake()));
         //获取http请求地址
         String hostCofig = host.value();
         String url = null;
