@@ -20,8 +20,12 @@ public class TestFactoryBean {
     @Resource
     private HelloWorld helloWorld;
 
+    @Resource
+    private HelloWorld helloWorld2;
+
     @Test
     public void test(){
         System.out.println(helloWorld.say());
+        System.out.println(helloWorld2.say());
     }
 }

@@ -17,6 +17,7 @@ public class HelloWorldFactoryBean implements FactoryBean<HelloWorld> {
 
     @Override
     public HelloWorld getObject() {
+        System.out.println("一次调用");
         return new HelloWorld() {
             @Override
             public String say() {

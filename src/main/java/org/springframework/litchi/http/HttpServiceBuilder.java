@@ -6,46 +6,26 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.FactoryBean;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import retrofit2.Retrofit;
+
+import javax.annotation.Resource;
 
 /**
  * @author: suijie
  * @date: 2018/6/9 11:18
  * @description:
  */
-public class HttpServiceBuilder<T> implements FactoryBean<T>, InitializingBean {
+public class HttpServiceBuilder<T> implements FactoryBean<T> {
     private final static Logger logger = LoggerFactory.getLogger(HttpServiceBuilder.class);
 
     private Class<T> targetClass;
-    private T object;
 
-    /** http客户端 */
-    private static OkHttpClient httpClient;
-
-    //初始化http客户端
-    static {
-        HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor(message -> {
-            if (logger.isDebugEnabled()) {
-                logger.debug(message);
-            }
-        });
-        httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-        httpClient = new OkHttpClient.Builder().addInterceptor(httpLoggingInterceptor).build();
-    }
-
-    @Autowired
+    @Resource
     private Environment environment;
 
     public HttpServiceBuilder(Class<T> targetClass) {
         this.targetClass = targetClass;
-    }
-
-    @Override
-    public T getObject() {
-        return object;
     }
 
     @Override
@@ -54,45 +34,39 @@ public class HttpServiceBuilder<T> implements FactoryBean<T>, InitializingBean {
     }
 
     @Override
-    public boolean isSingleton() {
-        return true;
-    }
-
-    @Override
-    public void afterPropertiesSet() {
-        if (targetClass == null) {
-            throw new NullPointerException("class is null");
-        }
+    public T getObject() {
+        //初始化http客户端
+        HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor(message -> {
+            if (logger.isDebugEnabled()) {
+                logger.debug(message);
+            }
+        });
+        httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        OkHttpClient httpClient = new OkHttpClient.Builder().addInterceptor(httpLoggingInterceptor).build();
+        //初始化retrofit builder
         Retrofit.Builder builder = new Retrofit.Builder();
         builder.client(httpClient);
         Host host = targetClass.getAnnotation(Host.class);
         HttpConvertFactory httpConvertFactory = new HttpConvertFactory(host.charset(),host.snake());
         builder.addConverterFactory(httpConvertFactory);
         builder.addCallAdapterFactory(new BizCallAdapterFactory());
-
-
-        if (host != null) {
-            String value = host.value();
-            String url=null;
-            if(environment!=null) {
-                url= environment.getProperty(value);
-            }
-            //spring没配置url
-            if (StringUtils.isEmpty(url)) {
-                //以http开头
-                if(value.startsWith("http")==false) {
-                    throw new IllegalArgumentException("config:" + value + " is not define");
-                }else{
-                    builder.baseUrl(value);
-                }
-            }else {
-                builder.baseUrl(url);
-            }
-        }else{
-            throw new NullPointerException("host is not define");
+        //获取http请求地址
+        String hostCofig = host.value();
+        String url = null;
+        if(environment != null) {
+            url = environment.getProperty(hostCofig);
         }
-        Retrofit build = builder.build();
-        object = build.create(targetClass);
+        if (StringUtils.isEmpty(url)) {
+            //以http开头
+            if(!hostCofig.startsWith("http")) {
+                throw new IllegalArgumentException("config:" + hostCofig + " is not define");
+            }
+            url = hostCofig;
+        }
+        builder.baseUrl(url);
+        //构建retrofit
+        Retrofit retrofit = builder.build();
+        return retrofit.create(targetClass);
     }
 
 }
