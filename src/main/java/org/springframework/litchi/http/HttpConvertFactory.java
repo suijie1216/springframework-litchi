@@ -19,8 +19,8 @@ import java.text.SimpleDateFormat;
  * @description:
  */
 public class HttpConvertFactory extends Converter.Factory {
-    private String charset = "utf-8";
 
+    private String charset;
 
     private JacksonConverterFactory jacksonConverterFactory;
 
