@@ -20,16 +20,13 @@ import java.lang.reflect.Type;
  * @description:
  */
 public final class JacksonConverterFactory extends Converter.Factory {
-    private String charset = "UTF-8";
+
+    private String charset;
+
     private MediaType MEDIA_TYPE;
 
+    private final ObjectMapper mapper;
 
-    public static JacksonConverterFactory create(ObjectMapper mapper) {
-        if (mapper == null) {
-            throw new NullPointerException("mapper == null");
-        }
-        return new JacksonConverterFactory(mapper);
-    }
 
     public static JacksonConverterFactory create(ObjectMapper mapper, String charset) {
         if (mapper == null) {
@@ -37,16 +34,8 @@ public final class JacksonConverterFactory extends Converter.Factory {
         }
         if (charset == null) {
             throw new NullPointerException("charset == null");
-
         }
         return new JacksonConverterFactory(mapper, charset);
-    }
-
-    private final ObjectMapper mapper;
-
-    private JacksonConverterFactory(ObjectMapper mapper) {
-        MEDIA_TYPE = MediaType.parse("application/json; charset=" + charset);
-        this.mapper = mapper;
     }
 
     private JacksonConverterFactory(ObjectMapper mapper, String charset) {
@@ -56,16 +45,14 @@ public final class JacksonConverterFactory extends Converter.Factory {
     }
 
     @Override
-    public Converter<ResponseBody, ?> responseBodyConverter(Type type, Annotation[] annotations,
-                                                            Retrofit retrofit) {
+    public Converter<ResponseBody, ?> responseBodyConverter(Type type, Annotation[] annotations, Retrofit retrofit) {
         JavaType javaType = mapper.getTypeFactory().constructType(type);
         ObjectReader reader = mapper.readerFor(javaType);
         return new JacksonResponseBodyConverter<>(reader);
     }
 
     @Override
-    public Converter<?, RequestBody> requestBodyConverter(Type type,
-                                                          Annotation[] parameterAnnotations, Annotation[] methodAnnotations, Retrofit retrofit) {
+    public Converter<?, RequestBody> requestBodyConverter(Type type, Annotation[] parameterAnnotations, Annotation[] methodAnnotations, Retrofit retrofit) {
         JavaType javaType = mapper.getTypeFactory().constructType(type);
         ObjectWriter writer = mapper.writerFor(javaType);
         return new JacksonRequestBodyConverter<>(writer);
