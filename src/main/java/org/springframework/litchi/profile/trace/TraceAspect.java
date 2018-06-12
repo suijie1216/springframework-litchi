@@ -47,10 +47,8 @@ public class TraceAspect {
         }
         Trace.traceOut(point);
         //如果追踪结束并且调用总时间大于阈值则打印trace
-        if(Trace.traceEnd()){
-            if(autoPrintTrace(joinPoint) && Trace.getCost(point) > this.getThreshold(joinPoint)){
-                logger.info(Trace.traceInfo());
-            }
+        if(Trace.traceEnd() && autoPrintTrace(joinPoint) && Trace.getCost(point) > this.getThreshold(joinPoint)){
+            logger.info(Trace.traceInfo());
         }
     }
 
