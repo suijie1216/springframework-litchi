@@ -24,4 +24,10 @@ public @interface TracePoint {
      */
     String value() default "";
 
+    /**
+     * 调用时间超过阈值则打印trace
+     * @return
+     */
+    long threshold() default 200L;
+
 }

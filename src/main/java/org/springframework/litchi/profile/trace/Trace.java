@@ -18,13 +18,13 @@ public class Trace {
      */
     private static final String SPACE_STR = "    ";
     /**
-     * trace索引，进出索引一致
+     * trace索引，进出索引一致，根方法的index = 0，index == -1标识结束
      */
     private static ThreadLocal<Integer> index = ThreadLocal.withInitial(() -> -1);
     /**
      * trace日志信息
      */
-    private static ThreadLocal<StringBuilder> log = ThreadLocal.withInitial(() -> new StringBuilder("\n"));
+    private static ThreadLocal<StringBuilder> traceLog = ThreadLocal.withInitial(() -> new StringBuilder("\n"));
     /**
      * trace节点栈
      */
@@ -57,9 +57,9 @@ public class Trace {
         index.set(idx);
         traceStack.get().push(node);
         for (int i = 0; i < node.getIndex(); i++) {
-            log.get().append(SPACE_STR);
+            traceLog.get().append(SPACE_STR);
         }
-        log.get().append(node.getName()).append("--->begin:").append(node.getFormatTime()).append("\n");
+        traceLog.get().append(node.getName()).append("--->begin:").append(node.getFormatTime()).append("\n");
     }
 
     /**
@@ -73,7 +73,7 @@ public class Trace {
         int idx = index.get();
         node.setIndex(idx);
         index.set(idx - 1);
-        StringBuilder sb = log.get();
+        StringBuilder sb = traceLog.get();
         if (traceStack.get().isEmpty()) {
             sb.append(node.getName()).append("--->end:").append(node.getFormatTime()).append(" not find bigin").append("\n");
             return;
@@ -107,7 +107,7 @@ public class Trace {
     public static void reset() {
         traceStack.remove();
         index.remove();
-        log.remove();
+        traceLog.remove();
         costMap.remove();
     }
 
@@ -115,9 +115,21 @@ public class Trace {
      * 打印trace信息，打印完清空trace
      * @return
      */
-    public static String printTrace() {
-        String trace = log.get().toString();
+    public static String traceInfo() {
+        String trace = traceLog.get().toString();
         reset();
         return trace;
+    }
+
+    /**
+     * 追踪是否结束
+     * @return
+     */
+    public static boolean traceEnd(){
+        boolean flag = false;
+        if(index.get() == -1){
+            flag = true;
+        }
+        return flag;
     }
 }

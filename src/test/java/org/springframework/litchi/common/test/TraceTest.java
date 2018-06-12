@@ -25,7 +25,7 @@ public class TraceTest {
 
     @Test
     public void trace() throws InterruptedException {
-        for(int i = 0; i < 100; i++){
+        for(int i = 0; i < 2; i++){
             Trace.traceIn(rootMethod);
             Thread.sleep(19);
             Trace.traceIn("method11");
@@ -54,11 +54,11 @@ public class TraceTest {
 
             Trace.traceOut("method14");
             Trace.traceOut(rootMethod);
-            long rt = Trace.getCost(rootMethod);
+            /*long rt = Trace.getCost(rootMethod);
             qpsCounterWorker.increment(rootMethod, rt);
             if(rt > 100){
-                System.out.println(Trace.printTrace());
-            }
+                System.out.println(Trace.traceInfo());
+            }*/
         }
     }
 }
