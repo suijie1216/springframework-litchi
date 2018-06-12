@@ -47,8 +47,10 @@ public class TraceAspect {
         }
         Trace.traceOut(point);
         //如果追踪结束并且调用总时间大于阈值则打印trace
-        if(Trace.traceEnd() && Trace.getCost(point) > this.getThreshold(joinPoint)){
-            logger.info(Trace.traceInfo());
+        if(Trace.traceEnd()){
+            if(autoPrintTrace(joinPoint) && Trace.getCost(point) > this.getThreshold(joinPoint)){
+                logger.info(Trace.traceInfo());
+            }
         }
     }
 
@@ -91,4 +93,21 @@ public class TraceAspect {
         }
         return threshold;
     }
+
+    /**
+     * 是否自动打印trace
+     * @param joinPoint
+     * @return
+     */
+    private boolean autoPrintTrace(JoinPoint joinPoint){
+        MethodSignature sign = (MethodSignature) joinPoint.getSignature();
+        Method method = sign.getMethod();
+        TracePoint tracePoint = method.getAnnotation(TracePoint.class);
+        boolean isPrintTrace = false;
+        if (tracePoint != null) {
+            isPrintTrace = tracePoint.print();
+        }
+        return isPrintTrace;
+    }
+
 }

@@ -25,6 +25,12 @@ public @interface TracePoint {
     String value() default "";
 
     /**
+     * 加了TracePoint就自动打印trace
+     * @return
+     */
+    boolean print() default false;
+
+    /**
      * 调用时间超过阈值则打印trace
      * @return
      */
