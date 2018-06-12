@@ -11,9 +11,9 @@ import java.lang.reflect.Type;
  * @date: 2018/6/9 11:22
  * @description:
  */
-public class BizCallAdapterFactory extends CallAdapter.Factory {
+public class HttpCallAdapterFactory extends CallAdapter.Factory {
     @Override
     public CallAdapter<?, ?> get(Type returnType, Annotation[] annotations, Retrofit retrofit) {
-        return new BizCallAdapter(returnType);
+        return new HttpCallAdapter(returnType);
     }
 }

@@ -13,11 +13,11 @@ import java.lang.reflect.Type;
  * @date: 2018/6/9 11:22
  * @description:
  */
-public class BizCallAdapter implements CallAdapter<Object, Object> {
+public class HttpCallAdapter implements CallAdapter<Object, Object> {
     private Type responseType;
-    private final static Logger logger = LoggerFactory.getLogger(BizCallAdapter.class);
+    private final static Logger logger = LoggerFactory.getLogger(HttpCallAdapter.class);
 
-    public BizCallAdapter(Type responseType) {
+    public HttpCallAdapter(Type responseType) {
         this.responseType = responseType;
     }
 
