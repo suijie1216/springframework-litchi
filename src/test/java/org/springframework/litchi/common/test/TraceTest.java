@@ -2,8 +2,12 @@ package org.springframework.litchi.common.test;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.ComponentScans;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.litchi.profile.qps.QPSCounterWorker;
 import org.springframework.litchi.profile.trace.Trace;
+import org.springframework.litchi.profile.trace.TracePoint;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -16,12 +20,30 @@ import javax.annotation.Resource;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes={BeanConfig.class})
+@EnableAspectJAutoProxy
+@ComponentScans({@ComponentScan("org.springframework.litchi")})
 public class TraceTest {
 
     private String rootMethod = "root method1";
 
     @Resource
     private QPSCounterWorker qpsCounterWorker;
+
+    @Test
+    public void testTrace() throws InterruptedException{
+        this.method1();
+    }
+
+    @TracePoint(threshold = 100)
+    public void method1() throws InterruptedException {
+        Thread.sleep(234L);
+        this.method2();
+    }
+
+    @TracePoint
+    public void method2() throws InterruptedException {
+        Thread.sleep(234L);
+    }
 
     @Test
     public void trace() throws InterruptedException {
@@ -54,11 +76,11 @@ public class TraceTest {
 
             Trace.traceOut("method14");
             Trace.traceOut(rootMethod);
-            /*long rt = Trace.getCost(rootMethod);
+            long rt = Trace.getCost(rootMethod);
             qpsCounterWorker.increment(rootMethod, rt);
             if(rt > 100){
                 System.out.println(Trace.traceInfo());
-            }*/
+            }
         }
     }
 }
