@@ -14,7 +14,21 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Target(ElementType.TYPE)
 @Retention(RUNTIME)
 public @interface Host {
+    /**
+     * 请求地址
+     * @return
+     */
     String value();
+
+    /**
+     * 参数格式
+     * @return
+     */
     boolean snake() default true;
+
+    /**
+     * 编码
+     * @return
+     */
     String charset() default "utf-8";
 }
