@@ -34,7 +34,7 @@ public class TraceTest {
         this.method1();
     }
 
-    @TracePoint(threshold = 100)
+    @TracePoint(threshold = 100, print = true)
     public void method1() throws InterruptedException {
         Thread.sleep(234L);
         this.method2();
