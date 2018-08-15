@@ -142,4 +142,17 @@
         </plugins>
     </build>
 
+    <distributionManagement>
+        <repository>
+            <id>dev</id>
+            <name>Nexus Release Repository</name>
+            <url>http://mvn.dev.alipay.net/artifactory/content/repositories/Alipay-Releases</url>
+        </repository>
+        <snapshotRepository>
+            <id>snapshots</id>
+            <name>Nexus Snapshot Repository</name>
+            <url>http://mvn.dev.alipay.net/artifactory/content/repositories/Alipay-Snapshot</url>
+        </snapshotRepository>
+    </distributionManagement>
+
 </project>

@@ -8,9 +8,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * @author: suijie
- * @date: 2018/5/27 11:27
- * @description:
+ * @author suijie
  */
 @Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
@@ -20,20 +18,8 @@ public @interface TracePoint {
 
     /**
      * 自定义方法名
-     * @return
+     * @return s
      */
     String value() default "";
-
-    /**
-     * 加了TracePoint就自动打印trace
-     * @return
-     */
-    boolean print() default false;
-
-    /**
-     * 调用时间超过阈值则打印trace
-     * @return
-     */
-    long threshold() default 200L;
 
 }

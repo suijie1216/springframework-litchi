@@ -28,58 +28,42 @@ public class TraceTest {
 
     @Resource
     private QPSCounterWorker qpsCounterWorker;
-
-    @Test
-    public void testTrace() throws InterruptedException{
-        this.method1();
-    }
-
-    @TracePoint(threshold = 100, print = true)
-    public void method1() throws InterruptedException {
-        Thread.sleep(234L);
-        this.method2();
-    }
-
-    @TracePoint
-    public void method2() throws InterruptedException {
-        Thread.sleep(234L);
-    }
-
+    
     @Test
     public void trace() throws InterruptedException {
         for(int i = 0; i < 2; i++){
-            Trace.traceIn(rootMethod);
+            Trace.enter(rootMethod);
             Thread.sleep(19);
-            Trace.traceIn("method11");
+            Trace.enter("method11");
             Thread.sleep(209);
-            Trace.traceOut("method11");
+            Trace.release("method11");
 
-            Trace.traceIn("method12");
+            Trace.enter("method12");
             Thread.sleep(402);
-            Trace.traceOut("method12");
-            Trace.traceIn("method13");
+            Trace.release("method12");
+            Trace.enter("method13");
             Thread.sleep(53);
-            Trace.traceOut("method13");
+            Trace.release("method13");
 
-            Trace.traceIn("method14");
+            Trace.enter("method14");
             Thread.sleep(19);
-            Trace.traceIn("method141");
+            Trace.enter("method141");
             Thread.sleep(209);
-            Trace.traceOut("method141");
+            Trace.release("method141");
 
-            Trace.traceIn("method142");
+            Trace.enter("method142");
             Thread.sleep(402);
-            Trace.traceOut("method142");
-            Trace.traceIn("method143");
+            Trace.release("method142");
+            Trace.enter("method143");
             Thread.sleep(53);
-            Trace.traceOut("method143");
+            Trace.release("method143");
 
-            Trace.traceOut("method14");
-            Trace.traceOut(rootMethod);
+            Trace.release("method14");
+            Trace.release(rootMethod);
             long rt = Trace.getCost(rootMethod);
             qpsCounterWorker.increment(rootMethod, rt);
             if(rt > 100){
-                System.out.println(Trace.traceInfo());
+                System.out.println(Trace.end());
             }
         }
     }

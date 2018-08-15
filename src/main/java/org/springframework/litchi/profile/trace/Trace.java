@@ -1,135 +1,99 @@
 package org.springframework.litchi.profile.trace;
 
-import com.google.common.collect.Maps;
-
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
-import java.util.function.Supplier;
 
 /**
- * @author: suijie
- * @date: 2018/5/27 14:54
- * @description:
+ * @author suijie
  */
 public class Trace {
 
-    /**
-     * 4个空格符
-     */
-    private static final String SPACE_STR = "    ";
-    /**
-     * trace索引，进出索引一致，根方法的index = 0，index == -1标识结束
-     */
     private static ThreadLocal<Integer> index = ThreadLocal.withInitial(() -> -1);
-    /**
-     * trace日志信息
-     */
-    private static ThreadLocal<StringBuilder> traceLog = ThreadLocal.withInitial(() -> new StringBuilder("\n"));
-    /**
-     * trace节点栈
-     */
-    private static ThreadLocal<Stack<TraceNode>> traceStack = ThreadLocal.withInitial(new Supplier<Stack<TraceNode>>() {
-        @Override
-        public Stack<TraceNode> get() {
-            return new Stack<>();
-        }
-    });
-    /**
-     * 每个方法调用时间
-     */
-    private static ThreadLocal<Map<String, Long>> costMap = ThreadLocal.withInitial(new Supplier<Map<String, Long>>() {
-        @Override
-        public Map<String, Long> get() {
-            return Maps.newHashMap();
-        }
-    });
+    private static ThreadLocal<Integer> sequence = ThreadLocal.withInitial(() -> -1);
+    private static ThreadLocal<Stack<Node>> profile = ThreadLocal.withInitial(() -> new Stack<>());
+    private static ThreadLocal<StringBuilder> log = ThreadLocal.withInitial(() -> new StringBuilder("\n"));
+    private static ThreadLocal<Map<String, Long>> costMap = ThreadLocal.withInitial(() -> new HashMap<>());
 
-    /**
-     * 进入方法
-     * @param name
-     */
-    public static void traceIn(String name) {
-        TraceNode node = new TraceNode();
-        node.setName(name);
-        node.setTime(System.currentTimeMillis());
-        int idx = index.get() + 1;
-        node.setIndex(idx);
-        index.set(idx);
-        traceStack.get().push(node);
-        for (int i = 0; i < node.getIndex(); i++) {
-            traceLog.get().append(SPACE_STR);
-        }
-        traceLog.get().append(node.getName()).append("--->begin:").append(node.getFormatTime()).append("\n");
-    }
-
-    /**
-     * 跳出方法
-     * @param name
-     */
-    public static void traceOut(String name) {
-        TraceNode node = new TraceNode();
-        node.setName(name);
-        node.setTime(System.currentTimeMillis());
-        int idx = index.get();
-        node.setIndex(idx);
-        index.set(idx - 1);
-        StringBuilder sb = traceLog.get();
-        if (traceStack.get().isEmpty()) {
-            sb.append(node.getName()).append("--->end:").append(node.getFormatTime()).append(" not find bigin").append("\n");
-            return;
-        }
-        TraceNode begin = traceStack.get().pop();
-        for (int i = 0; i < node.getIndex(); i++) {
-            sb.append(SPACE_STR);
-        }
-        if (begin.getIndex() != node.getIndex()) {
-            sb.append(node.getName()).append("--->end:").append(node.getFormatTime()).append(" begin not match").append("\n");
-            return;
-        }
-        long cost = node.getTime() - begin.getTime();
-        sb.append(node.getName()).append("--->").append("end:").append(node.getFormatTime()).append(",cost:").append(cost).append("\n");
-        costMap.get().put(node.getName(), cost);
-    }
-
-    /**
-     * 获取方法的调用时间
-     * @param name
-     * @return
-     */
-    public static long getCost(String name) {
-        Long cost = costMap.get().get(name);
+    public static long getCost(String path) {
+        Long cost = costMap.get().get(path);
         return cost == null ? 0 : cost;
     }
 
-    /**
-     * 清空线程的trace信息
-     */
+    private static class Node implements Comparable<Node> {
+        private String name;
+        private long time;
+        private int index;
+        private int sequence;
+
+        @Override
+        public int compareTo(Node o) {
+            return this.sequence - o.sequence;
+        }
+    }
+
+    public static void enter(String name) {
+        Node node = new Node();
+        node.name = name;
+        node.time = System.currentTimeMillis();
+        int idx = index.get() + 1;
+        int seq = sequence.get() + 1;
+        node.index = idx;
+        node.sequence = seq;
+        index.set(idx);
+        sequence.set(seq);
+        profile.get().push(node);
+        for (int i = 0; i < node.index; i++) {
+            log.get().append("    ");
+        }
+        log.get().append(node.name).append("--->begin:").append(node.time).append("\n");
+    }
+
+    public static void release(String name) {
+        Node node = new Node();
+        node.name = name;
+        node.time = System.currentTimeMillis();
+        int idx = index.get();
+        node.index = idx;
+        index.set(idx - 1);
+        int seq = sequence.get() + 1;
+        node.sequence = seq;
+        sequence.set(seq);
+        StringBuilder sb = log.get();
+        if (profile.get().isEmpty()) {
+            sb.append(node.name).append("--->end:").append(node.time).append(" not find bigin").append("\n");
+            return;
+        }
+        Node begin = profile.get().pop();
+        for (int i = 0; i < node.index; i++) {
+            sb.append("    ");
+        }
+        if (begin.index != node.index) {
+            sb.append(node.name).append("--->end:").append(node.time).append(" begin not match").append("\n");
+            return;
+        }
+        long cost = node.time - begin.time;
+        sb.append(node.name).append("--->").append("end:").append(node.time).append(",cost:").append(cost).append("\n");
+        costMap.get().put(node.name, cost);
+    }
+
     public static void reset() {
-        traceStack.remove();
+        profile.remove();
         index.remove();
-        traceLog.remove();
+        sequence.remove();
+        log.remove();
         costMap.remove();
     }
 
-    /**
-     * 打印trace信息，打印完清空trace
-     * @return
-     */
-    public static String traceInfo() {
-        String trace = traceLog.get().toString();
+    public static String end() {
+        String profile = log.get().toString();
         reset();
-        return trace;
+        return profile;
     }
 
-    /**
-     * 追踪是否结束
-     * @return
-     */
-    public static boolean traceEnd(){
-        boolean flag = false;
-        if(index.get() == -1){
-            flag = true;
-        }
-        return flag;
+    public static boolean isEnd(){
+        return index.get() == -1;
     }
+
+
 }
