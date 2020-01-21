@@ -2,6 +2,7 @@ package org.springframework.litchi.profile.trace;
 
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.After;
+import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
@@ -36,7 +37,7 @@ public class TraceAspect {
         Trace.enter(point);
     }
 
-    @After("tracePoint()")
+    @AfterReturning("tracePoint()")
     public void doAfter(JoinPoint joinPoint) {
         try{
             String point = getPoint(joinPoint);
@@ -48,6 +49,8 @@ public class TraceAspect {
                 LOGGER.warn(Trace.end());
             }
         }catch (Exception e){
+            LOGGER.error("trace after error", e);
+        }finally {
             Trace.reset();
         }
 
