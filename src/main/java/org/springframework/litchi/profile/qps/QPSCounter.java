@@ -11,9 +11,8 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
 /**
- * @author: suijie
- * @date: 2018/5/29 19:29
- * @description: 每个实例对应一个url的qps计数器
+ * @author suijie
+ * 每个实例对应一个url的qps计数器
  */
 public class QPSCounter {
     /**
@@ -30,12 +29,8 @@ public class QPSCounter {
         this.queue = queue;
         CacheBuilder cacheBuilder = CacheBuilder.newBuilder();
         cacheBuilder.expireAfterAccess(2, TimeUnit.SECONDS);
-        cacheBuilder.removalListener(new RemovalListener<Long, QPSNode>() {
-            @Override
-            public void onRemoval(RemovalNotification<Long, QPSNode> removalNotification) {
-                QPSCounter.this.queue.offer(removalNotification.getValue());
-            }
-        });
+        cacheBuilder.removalListener(
+            (RemovalListener<Long, QPSNode>)removalNotification -> QPSCounter.this.queue.offer(removalNotification.getValue()));
         cacheBuilder.maximumSize(3);
         realCounter = cacheBuilder.build(new CacheLoader<Long, QPSNode>() {
             @Override
@@ -47,7 +42,6 @@ public class QPSCounter {
 
     /**
      * 记录qps并统计响应时间
-     * @param rt
      */
     public void incrQPS(Long rt) {
         try {
@@ -61,7 +55,6 @@ public class QPSCounter {
 
     /**
      * 获取当前时间秒值
-     * @return
      */
     private long getTime() {
         return System.currentTimeMillis() / 1000 * 1000;

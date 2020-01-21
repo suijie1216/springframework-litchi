@@ -5,9 +5,7 @@ import lombok.Data;
 import java.util.List;
 
 /**
- * @author: suijie
- * @date: 2018/5/26 11:13
- * @description:
+ * @author suijie
  */
 @Data
 public class PageResponse<T> extends Response<List<T>> {

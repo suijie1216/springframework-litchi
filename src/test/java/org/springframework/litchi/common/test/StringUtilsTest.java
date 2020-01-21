@@ -2,7 +2,6 @@ package org.springframework.litchi.common.test;
 
 import com.google.common.collect.Sets;
 import org.junit.Test;
-import org.springframework.litchi.common.util.StringUtils;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -15,12 +14,6 @@ import java.util.Set;
  * @description:
  */
 public class StringUtilsTest {
-    @Test
-    public void contextTest() {
-        String ss = "";
-        System.out.println(StringUtils.isEmpty(ss));
-        System.out.println(StringUtils.isNotEmpty(ss));
-    }
 
     public static String txt2String(File file){
         String result = "";

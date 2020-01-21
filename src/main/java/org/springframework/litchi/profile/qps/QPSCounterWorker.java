@@ -11,9 +11,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
 /**
- * @author: suijie
- * @date: 2018/5/30 18:18
- * @description:
+ * @author suijie
  */
 public class QPSCounterWorker {
     /**
@@ -83,8 +81,6 @@ public class QPSCounterWorker {
     }
     /**
      * qps计数
-     * @param path
-     * @param rt
      */
     public void increment(String path, long rt) {
         try {

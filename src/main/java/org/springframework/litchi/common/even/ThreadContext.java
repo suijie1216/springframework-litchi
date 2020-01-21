@@ -4,12 +4,9 @@ import com.google.common.collect.Maps;
 
 import java.lang.ref.SoftReference;
 import java.util.Map;
-import java.util.function.Supplier;
 
 /**
- * @author: suijie
- * @date: 2018/5/26 22:47
- * @description:
+ * @author suijie
  */
 public class ThreadContext {
 
@@ -24,21 +21,14 @@ public class ThreadContext {
         if(context == null){
             synchronized(ThreadContext.class){
                 if(context == null){
-                    context = ThreadLocal.withInitial(new Supplier<Map<String, SoftReference<Object>>>() {
-                        @Override
-                        public Map<String, SoftReference<Object>> get() {
-                            return Maps.newHashMap();
-                        }
-                    });
+                    context = ThreadLocal.withInitial(Maps::newHashMap);
                 }
             }
         }
     }
 
     /**
-     *
-     * @param key
-     * @param value
+     * put值
      */
     public static void put(String key, Object value) {
         SoftReference<Object> ref = new SoftReference<>(value);
@@ -47,8 +37,6 @@ public class ThreadContext {
 
     /**
      * 获取变量
-     * @param key
-     * @return
      */
     public static Object get(String key) {
         Object value = null;
@@ -64,7 +52,6 @@ public class ThreadContext {
 
     /**
      * 上下文大小
-     * @return
      */
     public static int size(){
         return context.get().size();

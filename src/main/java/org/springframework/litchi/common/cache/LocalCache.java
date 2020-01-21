@@ -5,9 +5,7 @@ import com.googlecode.concurrentlinkedhashmap.Weighers;
 import lombok.Data;
 
 /**
- * @author: suijie
- * @date: 2018/5/26 23:14
- * @description:
+ * @author suijie
  */
 public class LocalCache<K, V> {
 
@@ -31,8 +29,6 @@ public class LocalCache<K, V> {
 
     /**
      * 获取缓存
-     * @param key
-     * @return
      */
     public V get(K key){
         V value = null;
@@ -50,8 +46,6 @@ public class LocalCache<K, V> {
 
     /**
      * 数据存入缓存
-     * @param key
-     * @param value
      */
     public void put(K key, V value){
         Node<V> node = new Node<>();

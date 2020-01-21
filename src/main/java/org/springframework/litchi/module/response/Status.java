@@ -1,9 +1,7 @@
 package org.springframework.litchi.module.response;
 
 /**
- * @author: suijie
- * @date: 2018/5/24 15:32
- * @description:
+ * @author suijie
  */
 public interface Status {
     /**

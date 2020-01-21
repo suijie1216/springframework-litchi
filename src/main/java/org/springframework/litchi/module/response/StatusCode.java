@@ -1,12 +1,13 @@
 package org.springframework.litchi.module.response;
 
 /**
- * @author: suijie
- * @date: 2018/5/24 15:32
- * @description:
+ * @author suijie
  */
 public enum StatusCode implements Status {
 
+    /**
+     * 枚举值
+     */
     SERVICE_RUN_SUCCESS(10000, "服务运行成功"),
 
     PARAM_IS_EMPTY(20001, "参数%s不能为空"),

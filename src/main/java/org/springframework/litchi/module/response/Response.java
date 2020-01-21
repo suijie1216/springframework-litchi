@@ -3,9 +3,7 @@ package org.springframework.litchi.module.response;
 import lombok.Data;
 
 /**
- * @author: suijie
- * @date: 2018/5/24 15:32
- * @description:
+ * @author suijie
  */
 @Data
 public class Response<T> implements Status {

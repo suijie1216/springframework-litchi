@@ -6,9 +6,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
- * @author: suijie
- * @date: 2018/5/30 15:46
- * @description:
+ * @author suijie
  */
 @Data
 public class QPSNode {

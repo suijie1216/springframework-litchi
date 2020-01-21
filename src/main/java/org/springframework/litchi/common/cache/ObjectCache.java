@@ -5,9 +5,7 @@ import com.googlecode.concurrentlinkedhashmap.Weighers;
 import java.util.Set;
 
 /**
- * @author: suijie
- * @date: 2018/5/26 22:24
- * @description:
+ * @author suijie
  */
 public class ObjectCache<K, V>{
 
@@ -26,7 +24,6 @@ public class ObjectCache<K, V>{
 
     /**
      * 缓存关键字合集
-     * @return
      */
     public Set<K> keys(){
         return cache.keySet();
@@ -34,8 +31,6 @@ public class ObjectCache<K, V>{
 
     /**
      * 缓存获取数据
-     * @param key
-     * @return
      */
     public V get(K key){
         return cache.get(key);
@@ -43,8 +38,6 @@ public class ObjectCache<K, V>{
 
     /**
      * 数据存入缓存
-     * @param key
-     * @param value
      */
     public void put(K key, V value){
         cache.put(key, value);

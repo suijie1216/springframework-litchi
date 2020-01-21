@@ -8,9 +8,7 @@ import java.net.UnknownHostException;
 import java.util.Enumeration;
 
 /**
- * @author: suijie
- * @date: 2018/5/27 10:09
- * @description:
+ * @author suijie
  */
 public class HttpUtils {
 
@@ -22,7 +20,7 @@ public class HttpUtils {
 
     /**
      * 获取机器的ip地址
-     * @return
+     * @return str
      */
     public static String getLocalIp() {
         Enumeration netInterfaces;
